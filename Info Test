@@ -1,0 +1,44 @@
+import yfinance as yf
+import pandas as pd
+
+def get_market_info(tickers, start_date, end_date):
+    # Create an empty DataFrame to store market info
+    market_info = pd.DataFrame()
+
+    # Iterate over each ticker
+    for ticker in tickers:
+        # Download historical market data
+        data = yf.download(ticker, start=start_date, end=end_date)
+
+        # Add the Close price to the market info DataFrame
+        market_info[ticker] = data['Close']
+
+    return market_info
+
+def analyze_market_info(market_info):
+    # Calculate daily returns
+    daily_returns = market_info.pct_change()
+
+    # Calculate mean and standard deviation of daily returns
+    mean_returns = daily_returns.mean()
+    std_dev_returns = daily_returns.std()
+
+    # Print analysis results
+    print("Mean Daily Returns:")
+    print(mean_returns)
+    print("\nStandard Deviation of Daily Returns:")
+    print(std_dev_returns)
+
+if __name__ == "__main__":
+    # Define the currency pairs
+    tickers = ['EURUSD=X', 'GBPUSD=X']  # EUR/USD and GBP/USD
+
+    # Define the time period for analysis
+    start_date = '2022-01-01'
+    end_date = '2022-12-31'
+
+    # Get market information
+    market_info = get_market_info(tickers, start_date, end_date)
+
+    # Analyze market information
+    analyze_market_info(market_info)
